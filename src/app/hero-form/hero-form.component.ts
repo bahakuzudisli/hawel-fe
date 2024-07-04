@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-
 import { Hero } from '../hero';
+import { HeroService } from '../hero.service';
 
 @Component({
   selector: 'app-hero-form',
@@ -9,13 +9,22 @@ import { Hero } from '../hero';
 })
 export class HeroFormComponent {
 
-  genders = ['MALE','FEMALE'];
+  genders = ['MALE', 'FEMALE'];
 
   model = new Hero('', '', this.genders[0], '');
 
   submitted = false;
 
-  onSubmit() { this.submitted = true; }
+  constructor(private heroService: HeroService) {}
+
+  onSubmit() {
+    this.submitted = true;
+    this.heroService.addHero(this.model).subscribe((response: any) => {
+      console.log('Hero added:', response);
+    }, (error: any) => {
+      console.error('Error adding hero:', error);
+    });
+  }
 
 
   newHero() {
@@ -38,12 +47,4 @@ export class HeroFormComponent {
   }
 
   /////////////////////////////
-
 }
-
-
-/*
-Copyright Google LLC. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that
-can be found in the LICENSE file at https://angular.io/license
-*/
